@@ -7,8 +7,10 @@ import { HomeContainer, Product } from "../styles/pages/home";
 import tShirt from "../assets/img/tshirt.png";
 
 import "keen-slider/keen-slider.min.css";
+import { useEffect, useState } from "react";
 
-export default function Home(props) {
+export default function Home() {
+  const [list, setList] = useState<number[]>([]);
 
   const [sliderRef] = useKeenSlider({
     slides: {
@@ -17,9 +19,15 @@ export default function Home(props) {
     },
   });
 
+  useEffect(() => {
+    setTimeout(() => {
+      setList([1, 2, 3]);
+    }, 5000);
+  }, []);
+
   return (
     <HomeContainer ref={sliderRef} className="keen-slider">
-      <pre>{JSON.stringify(props.list)}</pre>
+      <pre>{JSON.stringify(list)}</pre>
       <Product className="keen-slider__slide">
         <Image src={tShirt} width={520} height={480} alt="" />
 
@@ -57,14 +65,4 @@ export default function Home(props) {
       </Product>
     </HomeContainer>
   );
-}
-
-export const getServerSideProps = async () => {
-  await new Promise(resolve => setTimeout(resolve, 5000))
-
-  return {
-    props: {
-      list: [1, 2, 3, 4]
-    }
-  }
 }
