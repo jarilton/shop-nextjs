@@ -9,7 +9,7 @@ export const HomeContainer = styled("main", {
   marginBottom: 50,
 });
 
-export const Product = styled("div", {
+export const Product = styled("a", {
   background: "#ffffff",
   borderRadius: 8,
   cursor: "pointer",
@@ -41,6 +41,7 @@ export const Product = styled("div", {
 
     strong: {
       fontSize: "$lg",
+      color: "$gray100"
     },
 
     span: {
