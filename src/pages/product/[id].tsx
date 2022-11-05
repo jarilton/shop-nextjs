@@ -1,4 +1,4 @@
-import { GetStaticProps } from "next";
+import { GetStaticPaths, GetStaticProps } from "next";
 import Image from "next/image";
 import Stripe from "stripe";
 import { stripe } from "../../lib/stripe";
@@ -21,8 +21,9 @@ interface ProductProps {
 export default function Product({ product }: ProductProps) {
   return (
     <ProductContainer>
-      <ImgContainer>minha imagem...</ImgContainer>
-      <Image src={product.imageUrl} width={520} height={480} alt="" />
+      <ImgContainer>
+        <Image src={product.imageUrl} width={520} height={480} alt="" />
+      </ImgContainer>
       <ProductDetails>
         <h1>{product.name}</h1>
 
@@ -35,6 +36,13 @@ export default function Product({ product }: ProductProps) {
     </ProductContainer>
   );
 }
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [{ params: { id: "prod_Mi5Dn0ObJbshxU" } }],
+    fallback: false,
+  };
+};
 
 export const getStaticProps: GetStaticProps<any, { id: string }> = async ({
   params,
