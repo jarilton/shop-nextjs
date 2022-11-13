@@ -1,6 +1,8 @@
+import axios from "axios";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import Stripe from "stripe";
 import { stripe } from "../../lib/stripe";
 import {
@@ -21,14 +23,25 @@ interface ProductProps {
 }
 
 export default function Product({ product }: ProductProps) {
-  const { isFallback } = useRouter();
+  const [isCreateCkeackout, setIsCreateCkeackout] = useState(false);
 
-  if (isFallback) {
-    return <h1>Loading...</h1>;
-  }
+  async function habdleBuyProduct() {
+    try {
+      setIsCreateCkeackout(true);
 
-  function habdleBuyProduct() {
-    console.log(product.defaultPriceId)
+      const response = await axios.post("/api/checkout", {
+        priceId: product.defaultPriceId,
+      });
+
+      const { checkoutUrl } = response.data;
+
+      window.location.href = checkoutUrl;
+    } catch (error) {
+      //Conectar com uma ferramenta de observabilidade (datadog / sentry)
+
+      setIsCreateCkeackout(false);
+      alert("Falha ao rediricionar ao checkout!");
+    }
   }
 
   return (
@@ -43,7 +56,9 @@ export default function Product({ product }: ProductProps) {
 
         <p>{product.description}</p>
 
-        <button onClick={habdleBuyProduct}>Comprar agora</button>
+        <button disabled={isCreateCkeackout} onClick={habdleBuyProduct}>
+          Comprar agora
+        </button>
       </ProductDetails>
     </ProductContainer>
   );
